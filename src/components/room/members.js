@@ -1,6 +1,6 @@
 "use client"
 import { setMembers } from "@/lib/slices/members";
-import { disconnectSocket, socketOnMemberUpdate, socketOnNewMemberJoined, socketOnRecvCode, socketRefreshMembers, socketSendPeerId } from "@/lib/socket.connect";
+import { disconnectSocket, socketLeave, socketOnMemberUpdate, socketOnNewMemberJoined, socketOnRecvCode, socketRefreshMembers, socketSendPeerId } from "@/lib/socket.connect";
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -8,8 +8,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import Voice from "./voice";
+import { useSession } from "next-auth/react";
 
 export default function Members(){
+    const {data: session} = useSession();
     const router = useRouter();
     
     const [typer, setTyper] = useState({});
@@ -18,10 +20,10 @@ export default function Members(){
     const members = useSelector((state)=>state.members.value);
 
     const leaveCollab = () =>{
+        socketLeave(session?.user?.id);
         disconnectSocket();
-        socketRefreshMembers();
-        localStorage.removeItem('host')
-        localStorage.removeItem('peerid')
+        localStorage.removeItem('host');
+        localStorage.removeItem('peerid');
         router.replace('/');
     }
 

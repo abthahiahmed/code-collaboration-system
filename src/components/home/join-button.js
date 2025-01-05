@@ -30,7 +30,7 @@ export default function JoinButton(){
 
     return (
         <div>
-        <button className="button button-white" onClick={newCollab}>{loading && <FontAwesomeIcon icon={faCircleNotch} spin className="me-2"/>}New Collab</button>
+        <button className="button button-white disabled:opacity-75" onClick={newCollab} disabled={loading}>{loading && <FontAwesomeIcon icon={faCircleNotch} spin className="me-2"/>}New Collab</button>
         <button onClick={async()=>signOut({redirect : false})}>Logout</button>
         </div>
     )

@@ -34,9 +34,12 @@ module.exports = CollabSocket = (httpServer) =>{
                 socket.to(roomId).emit('peerid', id);
             });
 
-            socket.on('disconnect', (user)=>{
+            socket.on('leave', (user)=>{
                 console.log(user);
-            })
+                const index = users.findIndex((item)=>item.id=user);
+                users.splice(index, 1);
+                socket.to(roomId).emit('membersUpdate', users);
+            });
 
         });
     });

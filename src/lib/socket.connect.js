@@ -2,6 +2,7 @@
 
 import { io } from "socket.io-client";
 
+
 export const socket = io({
     // reconnection : false,
 });
@@ -19,6 +20,8 @@ const joinRoom = (user, roomId) =>{
     socket.emit('joinRoom', roomId, user);
 }
 
+
+
 const socketOnNewMemberJoined = (callback) =>{
     socket.on('newMemberJoined', callback);
 }
@@ -28,6 +31,10 @@ const socketRefreshMembers = () =>{
 }
 const socketOnMemberUpdate = (callback) =>{
     socket.on('membersUpdate', callback)
+}
+
+const socketLeave = (user) =>{
+    socket.emit('leave', user);
 }
 
 const socketSendCode = (data) =>{
@@ -72,5 +79,6 @@ export {
     socketSendFiles, socketOnRecvFiles,
     socketSendCursor, socketOnRecvCursor,
     socketSendScroll, socketOnRecvScroll,
-    socketSendPeerId, socketOnRecvPeerId
+    socketSendPeerId, socketOnRecvPeerId,
+    socketLeave
 };
