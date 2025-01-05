@@ -1,6 +1,7 @@
 const { createServer } = require('http');
 const next = require('next');
 const CollabSocket = require('./src/socket/collab');
+const PeerServer = require('./src/socket/peerjs');
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -13,7 +14,8 @@ app.prepare().then(() => {
     const httpServer = createServer(handler);
 
     CollabSocket(httpServer); 
-        
+    PeerServer(3001);
+
     httpServer
     .once("error", (err) => {
         console.error(err);

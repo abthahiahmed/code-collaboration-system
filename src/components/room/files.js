@@ -106,6 +106,9 @@ export default function Files(){
 
     return (
         <div className="flex items-center gap-3">
+            <div>
+                <button></button>
+            </div>
             <div className="flex text-sm items-center gap-3 overflow-x-auto">
                 {
                 files.map((item, i)=>(

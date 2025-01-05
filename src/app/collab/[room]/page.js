@@ -13,7 +13,10 @@ export default function(){
             </div>
             <div className="">
                 <div className="w-[400px] p-2 h-full">
-                    <Members/>
+                    <div className="flex flex-col h-full">
+                        <Members/>
+                    </div>
+                    
                 </div>
             </div>
         </div>

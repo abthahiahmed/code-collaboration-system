@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import Files from "./files";
+import { peerOnOpen } from "@/lib/peer.connect";
 
 export default function Header(){
     const {data: session, status} = useSession();
@@ -13,7 +14,18 @@ export default function Header(){
 
     useEffect(()=>{
         connectSocket();
-        joinRoom(session?.user, room);
+
+        if (localStorage.getItem('host')){
+            peerOnOpen((id)=>{
+                joinRoom({...session?.user, peerId: id}, room);
+                localStorage.setItem('peerid', id);
+                // console.log("Host");
+            });
+        }else{
+            joinRoom(session?.user, room);
+            // console.log("Other");
+        }
+        
 
 
         return ()=>{

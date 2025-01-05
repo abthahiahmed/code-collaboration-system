@@ -29,6 +29,11 @@ module.exports = CollabSocket = (httpServer) =>{
                 socket.to(roomId).emit('file', files);
             });
 
+
+            socket.on('peerid', (id)=>{
+                socket.to(roomId).emit('peerid', id);
+            });
+
             socket.on('disconnect', (user)=>{
                 console.log(user);
             })

@@ -57,6 +57,13 @@ const socketOnRecvFiles = (callback) =>{
     socket.on('file', callback);
 }
 
+const socketSendPeerId = (id) =>{
+    socket.emit('peerid', id);
+}
+const socketOnRecvPeerId = (callback) =>{
+    socket.on('peerid', callback);
+}
+
 export {
     connectSocket,disconnectSocket,
     joinRoom, socketOnNewMemberJoined, 
@@ -65,4 +72,5 @@ export {
     socketSendFiles, socketOnRecvFiles,
     socketSendCursor, socketOnRecvCursor,
     socketSendScroll, socketOnRecvScroll,
+    socketSendPeerId, socketOnRecvPeerId
 };

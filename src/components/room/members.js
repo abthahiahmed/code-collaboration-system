@@ -1,12 +1,13 @@
 "use client"
 import { setMembers } from "@/lib/slices/members";
-import { disconnectSocket, socket, socketOnMemberUpdate, socketOnNewMemberJoined, socketOnRecvCode, socketRefreshMembers, socketSendFiles } from "@/lib/socket.connect";
+import { disconnectSocket, socketOnMemberUpdate, socketOnNewMemberJoined, socketOnRecvCode, socketRefreshMembers, socketSendPeerId } from "@/lib/socket.connect";
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
+import Voice from "./voice";
 
 export default function Members(){
     const router = useRouter();
@@ -19,6 +20,8 @@ export default function Members(){
     const leaveCollab = () =>{
         disconnectSocket();
         socketRefreshMembers();
+        localStorage.removeItem('host')
+        localStorage.removeItem('peerid')
         router.replace('/');
     }
 
@@ -26,11 +29,20 @@ export default function Members(){
         socketOnNewMemberJoined((users)=>{
             dispatch(setMembers(users));
             socketRefreshMembers();
+            if (localStorage.getItem('host')){
+                const peerid = localStorage.getItem('peerid');
+                // console.log(peerid);
+                socketSendPeerId(peerid);
+            }
         });
 
         socketOnMemberUpdate((users)=>{
             dispatch(setMembers(users));
-            
+            if (localStorage.getItem('host')){
+                const peerid = localStorage.getItem('peerid');
+                // console.log(peerid);
+                socketSendPeerId(peerid);
+            }
         });
         let statusTimeout = null;
         socketOnRecvCode((data)=>{
@@ -47,7 +59,7 @@ export default function Members(){
     }, []);
     
     return (
-        <div className="bg-zinc-900 rounded-md w-full p-3 h-full">
+        <div className="bg-zinc-900 rounded-md w-full p-3 flex-1 pb-[100px] relative">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-white">Members</h2>
                 <button className="button-sm button-red" onClick={leaveCollab}><FontAwesomeIcon icon={faPowerOff}/></button>
@@ -74,6 +86,8 @@ export default function Members(){
                 members.length == 0 && <p className="text-center text-sm text-gray-500">No Members!</p>
                 }
             </div>
+
+            <Voice/>
         </div>
     )
 }
